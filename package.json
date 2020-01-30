@@ -1,0 +1,23 @@
+{
+  "name": "gm-plotter-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Plotter server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "author": "Gabe Marquez",
+  "license": "MIT",
+  "dependencies": {
+    "apollo-server": "^2.9.16",
+    "dotenv": "^8.2.0",
+    "graphql": "^14.5.8"
+  },
+  "devDependencies": {
+    "debug": "^4.1.1",
+    "nodemon": "^2.0.2"
+  },
+  "type": "module"
+}
