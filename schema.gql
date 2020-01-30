@@ -22,3 +22,7 @@ type PlotterPoint {
   location: Coordinate!
   time: DateTime!
 }
+
+type PlotterData {
+  points: [PlotterPoint]
+}
