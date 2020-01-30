@@ -1,16 +1,24 @@
 import dotenv from 'dotenv'
-
 import Debug from 'debug'
-import apollo from 'apollo-server'
-import gql from 'graphql-tag'
-import fs from 'fs'
 
 import { PlotterTypeDefs, PlotterQueries, PlotterMutations } from './schema.js'
+const debug = Debug('plotter:apollo-server')
 dotenv.config()
 
-const debug = Debug('plotter:apollo-server')
 
-// A map of functions which return data for the schema.
+// Connect to MongoDB
+
+import mongoose from 'mongoose'
+
+const url = ;
+
+mongoose.connect(
+  process.env.PLOTTER_DB_URL || 'mongodb://localhost:27017/plotterdb',
+  { useNewUrlParser: true }
+)
+
+db.on('error', console.error.bind(console, 'connection error:'));
+
 const resolvers = {
   PlotterPoint: {
     dates: () => {
@@ -22,7 +30,9 @@ const resolvers = {
 
 debug({ resolvers })
 
+import apollo from 'apollo-server'
 const { ApolloServer } = apollo
+
 const server = new ApolloServer({
   typeDefs: [PlotterTypeDefs, PlotterQuery, PlotterMutations],
   resolvers

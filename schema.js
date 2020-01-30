@@ -40,3 +40,6 @@ export const PlotterQueries = gql`type Query{
 export const PlotterMutations = gql`type Mutation {
   addLocation(longitude: Float!, latitude: Float!, when: timestamp): PlotterPoint
 }`
+
+export const PlotterResolvers = {
+}
