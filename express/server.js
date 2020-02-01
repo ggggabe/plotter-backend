@@ -2,7 +2,7 @@ import dotenv from 'dotenv'
 import Debug from 'debug'
 import express from 'express'
 import PlotterRouter from './PlotterRoutes.js'
-import { PlotterMongoClient } from '../models/plotterdb.js'
+import { PlotterMongoClient } from '../models/PlotterMongoClient.js'
 
 dotenv.config()
 
