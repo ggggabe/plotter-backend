@@ -8,3 +8,4 @@
 4. Make a `GET` request to `localhost:420/plotter/locations` from your favorite API sending tool. I recommend PostMan.
 
 Optionally, you can run `DEBUG=* npm start` to see the debug logs
+Make sure your mongodb service is running!
