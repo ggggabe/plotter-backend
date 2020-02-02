@@ -4,31 +4,52 @@ import mongodb from 'mongodb'
 const debug = Debug('plotter:models:plotterdb')
 
 dotenv.config()
+const { MongoClient } = mongodb
 
 class PlotterMongoClient {
-  constructor() {
-    const { MONGO_IP } = process.env
-    const { MONGO_PORT } = process.env
-    const { MONGO_PLOTTER_DB } = process.env
-    debug({ MONGO_IP, MONGO_PORT, MONGO_PLOTTER_DB })
-
-    if (!MONGO_IP || !MONGO_PORT || !MONGO_PLOTTER_DB) throw new Error('Please set .env MONGO_IP, MONGO_PORT, MONGO_PLOTTER_DB')
-
-    this.path = `mongodb://${MONGO_IP}:${MONGO_PORT}/${MONGO_PLOTTER_DB}`
-    debug({path: this.path})
-  }
-
-  async getConnectionPool() {
-    await mongodb.connect(this.path, (err, database) => {
-      if (err) throw err
-      this.connectionPool = database
+  async getConnectionPool () {
+    await MongoClient.connect(this.makeMongoUrl(), {
+      poolSize: 10,
+      useUnifiedTopology: true
+    }, (e, client) => {
+      if (e) throw e
+      this.db = client.db(process.env.MONGO_PLOTTER_DB)
     })
 
-    return this.connectionPool
+    return this
   }
 
-  hello () {
-    debug('hello')
+  // :::: UNDER CONSTRUCTION ::::
+  async getAllLocations () {
+    if (!this.db) await this.getConnectionPool()
+
+    const collection = await this.useCollection('locations')
+    const locations = await collection.find().sort('time', 1).toArray()
+
+    return locations
+  }
+
+  async showCollections () {
+    if (!this.db) await this.getConnectionPool()
+
+    this.db.listCollections({}).toArray((err, collections) => {
+      if (err) throw err
+      debug({ collections })
+    })
+  }
+
+  async useCollection (c) {
+    return this.db.collection(c)
+  }
+
+  makeMongoUrl () {
+    const { MONGO_IP } = process.env
+    const { MONGO_PORT } = process.env
+    debug({ MONGO_IP, MONGO_PORT })
+
+    if (!MONGO_IP || !MONGO_PORT) throw new Error('Please set .env MONGO_IP, MONGO_PORT')
+
+    return `mongodb://${MONGO_IP}:${MONGO_PORT}`
   }
 }
 

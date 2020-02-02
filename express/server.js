@@ -11,11 +11,11 @@ const server = express()
 const port = process.env.PORT_PLOTTER || 420
 
 async function init () {
+  const plotterDbClient = await new PlotterMongoClient()
+
   server.use(
     '/plotter',
-    PlotterRouter(
-      (new PlotterMongoClient()).getConnectionPool()
-    )
+    PlotterRouter(await plotterDbClient.getConnectionPool())
   )
 
   server.listen(port, () => {
