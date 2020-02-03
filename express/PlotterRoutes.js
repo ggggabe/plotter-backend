@@ -9,7 +9,25 @@ async function getLocationsByDay (query, client) {
     client
   })
 
-  return await client.getAllLocations()
+  return client.getAllLocations()
+}
+
+async function addLocation (locationObj, client) {
+  const fields = ['longitude', 'latitude', 'time']
+  const missing = fields.filter(key => locationObj[key] === undefined)
+
+  if (missing.length) {
+    throw new Exception(`missing fields: ${missing.join(', ')}`)
+  }
+
+  const request = {}
+  const {
+    latitude,
+    longitude,
+    time
+  } = locationObj
+
+  return client.addLocation({ latitude, longitude, time })
 }
 
 export default dbClient => {
@@ -20,21 +38,21 @@ export default dbClient => {
   // :::: API :::::::::::::
   // ::::::::::::::::::::::
   // :::: GET REQUESTS ::::
+
   PlotterRouter.get('/locations', async ({ query }, res) => {
     debug({ query })
 
-    res.send(await getLocationsByDay(
-      query, dbClient
-    ))
+    res.send(await getLocationsByDay(query, dbClient))
   })
 
   // :::: API :::::::::::::
   // ::::::::::::::::::::::
   // :::: POST REQUESTS :::
-  PlotterRouter.post('/location', ({ body }, res) => {
-    debug({ body })
 
-    res.send('hello post')
+  PlotterRouter.post('/location', async ({ body: locationObj }, res) => {
+    debug({ locationObj })
+
+    res.send(await addLocation(locationObj, dbClient))
   })
 
   return PlotterRouter

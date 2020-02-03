@@ -19,7 +19,6 @@ class PlotterMongoClient {
     return this
   }
 
-  // :::: UNDER CONSTRUCTION ::::
   async getAllLocations () {
     if (!this.db) await this.getConnectionPool()
 
@@ -38,7 +37,22 @@ class PlotterMongoClient {
     })
   }
 
+  async addLocation (locationDoc) {
+    const locations = await this.useLocations()
+    const result = await locations.insert(locationDoc)
+    const newDoc = await locations.find({ _id: result.insertedIds[0] }).toArray()
+
+    return newDoc
+  }
+
+  // :::: UNDER CONSTRUCTION ::::
+  async useLocations () {
+    return this.useCollection('locations')
+  }
+
   async useCollection (c) {
+    if (!this.db) await this.getConnectionPool()
+
     return this.db.collection(c)
   }
 
