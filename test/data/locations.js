@@ -1,4 +1,4 @@
-[
+const locationTestData = [
   {
     "longitude":-73.992929000000004,
     "time":1580241888478.908,
@@ -22,3 +22,5 @@
     "latitude":40.673822999999999
   }
 ]
+
+export default locationTestData
